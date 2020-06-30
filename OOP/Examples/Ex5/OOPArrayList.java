@@ -1,118 +1,93 @@
 
+
 package Ex5;
 
 
 class OOPArrayList implements OOPList {
 
-	private int[] arr;
-	private int elements;
+        protected int[] arr;
+        protected int head;
+	protected int tail;
 
-	OOPArrayList() {
-		arr = new int[0];
-		elements = 0;
-	}
+        OOPArrayList() {
+                arr = new int[2];
+                head = 1;
+		tail = 1;
+        }
 
-	public void addHead(int v) {
-		addLeft(v);
-	}
+        public void addHead(int v) {
+                addLeft(v);
+        }
 
-	public void removeHead() {
-		removeLeft();
-	}
+        public void removeHead() {
+                removeLeft();
+        }
 
-	public void removeLeft() {
+        public void removeLeft() {
 
-		if (elements == 0)
+		if (this.listLength() == 0)
 			return;
 
-		if (elements == 1)
-			arr[0] = 0;
-
-		for (int i=0; i<elements-1; i++) {
-			arr[i] = arr[i+1];
-		}
-
-		arr[elements-1] = 0;
-		elements--;
-
-	}
-
-
+		head++;
+        }
 
 	public void addLeft(int v) {
+				
+		if (head == 0)
+			resizeList();
+                
+		head--;
+		arr[head] = v;
 
-		if (elements == arr.length) {
-			int[] newarr = new int[arr.length+1];
-			copyLeft(newarr);
-			changeArr(newarr);
-			arr[0] = v;
-			elements++;
-		} else {
-			
-			elements++;
-			for (int i = elements-1; i > 0; i--) {
-				arr[i] = arr[i-1];
-			}
-			arr[0] = v;
+        }
 
+        public void addRight(int v) {
+
+             	if (tail == arr.length) 
+			resizeList();
+		
+
+		tail++;
+		arr[tail-1] = v;
+
+        }
+
+	private void resizeList() {
+
+		int length = listLength();
+		int[] newarr = new int[2*length+2];
+		int newhead = (int) Math.floor(length/2) + 1;
+		int newtail = newhead + length;
+
+		for (int i=0; i<length; i++) {
+			newarr[newhead + i] = arr[head+i];
 		}
 
-
-	}
-
-	public void addRight(int v) {
-
-		if (elements == arr.length) {
-			int[] newarr = new int[2*arr.length];
-			copyRight(newarr);
-			changeArr(newarr);
-		}
-
-		arr[elements] = v;
-		elements++;
+		arr = newarr;
+		head = newhead;
+		tail = newtail;
 
 	}
 
 	public int getHead() {
-		return arr[0];
-	}
-
-	private void changeArr(int[] cpy) {
-		this.arr = cpy;
-	}
-
-	private void copyRight(int[] cpy) {
-
-		for (int i = 0; i<arr.length; i++) {
-			cpy[i] = arr[i];
-		}
-
-	}
-
-	private void copyLeft(int[] cpy) {
-
-		cpy[0] = 0;
-
-		for (int i = 0; i<arr.length; i++) {
-			cpy[i+1] = arr[i];
-		}
-
-	}
+               return arr[head];
+        }
 
 	public int getNth(int n) {
-		if (n >= elements) {
-			System.out.println("Invalid index. Printing -1");
+                
+		if (n >= listLength()) {
+			System.out.println("Invalid index. Printing zero");
 			return -1;
 		}
 
-		return arr[n];
-	}
+		return arr[head + n];
 
-	public int listLength() {
-		return elements;
-	}
+        }
 
-
+        public int listLength() {
+                return tail - head;
+        }
 
 }
+
 
