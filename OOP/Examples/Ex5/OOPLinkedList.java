@@ -67,8 +67,9 @@ public class OOPLinkedList {
 	public OOPLinkedList reverseList() {
 
 		OOPLinkedList res = new OOPLinkedList();
+		int length = this.listLength();
 
-		for (int i = 0; i < this.listLength(); i++) {
+		for (int i = 0; i < length; i++) {
 			res.addHead(this.getNth(i));
 		}
 
@@ -78,7 +79,9 @@ public class OOPLinkedList {
 
 	public void printList() {
 
-		for (int i = 0; i < listLength(); i++) {
+		int length = listLength();
+
+		for (int i = 0; i < length; i++) {
 			System.out.print(getNth(i) + " ");
 		}
 		System.out.println();
