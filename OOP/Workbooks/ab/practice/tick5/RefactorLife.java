@@ -21,33 +21,50 @@ class RefactorLife {
 		}
 	}
 
+	private static List<Pattern> loadPatlist(String[] args, int index) {
+	
+		List<Pattern> patlist = new LinkedList<Pattern>();
+
+		if (args[index].startsWith("http://") || args[index].startsWith("https://")) {
+				
+			try {
+				patlist = PatternLoader.loadFromURL(args[index]);
+			} catch (IOException ex) {
+				System.out.println("An error occured when loading the patterns from a URL");
+			} catch (PatternFormatException ex) {
+
+			}
+
+		} else {
+
+			try {
+				patlist = PatternLoader.loadFromDisk(args[index]);
+			} catch (IOException ex) {
+				System.out.println("An error occured when loading the patterns from a file");
+			} catch (PatternFormatException ex) {
+
+			}
+		}
+
+		return patlist;
+
+	}
+
 	public static void main(String[] args) throws Exception {
 
 	
 		try {
 
+			String worldType = args.length == 3 ? args[0] : "--array";
 			List<Pattern> patlist = new LinkedList<Pattern>();;
 
-			if (args[0].startsWith("http://") || args[0].startsWith("https://")) {
-				
-				try {
-					patlist = PatternLoader.loadFromURL(args[0]);
-				} catch (IOException ex) {
-					System.out.println("An error occured when loading the patterns from a URL");
-
-				}
-
-			} else {
-
-				try {
-				
-					patlist = PatternLoader.loadFromDisk(args[0]);
-				} catch (IOException ex) {
-					System.out.println("An error occured when loading the patterns from a file");
-
-				}
+			if (args.length == 3) {
+				patlist = loadPatlist(args, 1);
+			} else if (args.length == 2 || args.length == 1) {
+				patlist = loadPatlist(args, 0);
 			}
-
+			
+			//Print contents only
 			if (args.length == 1) {
 
 				int index = 0;
@@ -57,43 +74,51 @@ class RefactorLife {
 					index++;
 				}
 
-			} else if (args.length == 2) {
+			//Display game	
+			} else {
 
 				int index = -1;
 				
-				try {
+				if (args.length == 3) {
+					index = Integer.parseInt(args[2]);
+				} else {
 					index = Integer.parseInt(args[1]);
-				
-				} catch (NumberFormatException ex) {
-
-					System.out.println("Error: The second argument must be an integer value");
-				
 				}
 
-
-				try {
-
-					Pattern p = patlist.get(index);
-					World w = new TestArrayWorld(p.getWidth(), p.getHeight());
-					p.initialise(w);
-					play(w);
+				Pattern p = patlist.get(index);
+				World w = null;
 				
-				} catch (IndexOutOfBoundsException ex) {
-
-					System.out.println("Error: invalid index " + index);
-
+				if (worldType.equals("--array")) {
+					w = new ArrayWorld(p.getWidth(), p.getHeight());
+				} else if (worldType.equals("--long")) {
+					w = new PackedWorld();
+				} else if (worldType.equals("--aging")) {
+					w = new AgingWorld(p.getWidth(), p.getHeight());
+				} else {
+					System.out.println("Invalid world type");
 				}
-				
-			} else {
 
-				throw new ArrayIndexOutOfBoundsException();
-			}	
+				
+				p.initialise(w);
+				play(w);
+				
+
+			}
+				
 
 
 		} catch (ArrayIndexOutOfBoundsException ex) {
 
 			System.out.println("Error: Invalid # of arguments. Input can be URL/textfile or URL/textfile & index number, nothing more");
 
+		} catch (IndexOutOfBoundsException ex) {
+
+			System.out.println("Error: invalid index");
+
+		} catch (NumberFormatException ex) {
+
+			System.out.println("Error: The trailing argument must be an integer value. Instead it was");
+		
 		} catch (PatternFormatException ex) {
 
 	
