@@ -1,7 +1,7 @@
 
-package Ex5;
+package Ex9;
 
-public class OOPLinkedList implements OOPList {
+public class OOPLinkedList implements Cloneable {
 
 	private OOPLinkedListElement head;
 
@@ -85,6 +85,52 @@ public class OOPLinkedList implements OOPList {
 			System.out.print(getNth(i) + " ");
 		}
 		System.out.println();
+
+	}
+
+	@Override
+	public OOPLinkedList clone() {
+
+		try {
+
+			OOPLinkedList c = (OOPLinkedList) super.clone();
+			c.setHeadNode((OOPLinkedListElement) this.getHeadNode().clone());
+
+			return c;
+
+		} catch (CloneNotSupportedException ex) {
+
+			throw new RuntimeException("Problem with superclass", ex);
+
+		}	
+		
+
+	}
+
+	public static void main(String[] args) {
+
+		OOPLinkedList test = new OOPLinkedList();
+		test.addHead(1);
+		test.addHead(2);
+		test.addHead(3);
+		test.addHead(4);
+
+		System.out.println("Original:");
+		test.printList();
+
+		OOPLinkedList copy = test.clone();
+
+		System.out.println("Copy:");
+		copy.printList();
+
+		test.removeHead();
+		test.removeHead();
+		copy.removeHead();
+
+		System.out.println("Original after deleting 2");
+		test.printList();
+		System.out.println("Copy after deleting 1");
+		copy.printList();
 
 	}
 
