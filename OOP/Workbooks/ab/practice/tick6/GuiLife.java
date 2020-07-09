@@ -17,6 +17,7 @@ public class GuiLife extends JFrame {
 
 	private PatternPanel patternPanel;
 	private ControlPanel controlPanel;
+	private GamePanel gamePanel;
 
 	public GuiLife() {
 		super("GuiLife");
@@ -50,10 +51,11 @@ public class GuiLife extends JFrame {
 	}
 
 	private JComponent createGamePanel() {
-  		JPanel holder = new JPanel();
+		JPanel holder = new JPanel();
   		addBorder(holder,Strings.PANEL_GAMEVIEW);
-  		JPanel result = new JPanel();
+  		GamePanel result = new GamePanel();
   		holder.add(result);
+		gamePanel = result;
   		return new JScrollPane(holder);
  	}
 
@@ -83,6 +85,8 @@ public class GuiLife extends JFrame {
 		try {
 			List<Pattern> list = PatternLoader.loadFromDisk("ab/practice/tick6/testpatterns.txt");
 			gui.patternPanel.setPatterns(list);
+			World w = gui.controlPanel.initialiseWorld(list.get(0));
+			gui.gamePanel.display(w);
 		} catch (IOException ioe) {
 		} catch (PatternFormatException ex) {}
 		
