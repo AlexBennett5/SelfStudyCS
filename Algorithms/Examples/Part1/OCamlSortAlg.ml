@@ -138,11 +138,31 @@ let rec mergesort = function
                         merge(l, r)
 ;;
 
+(* Quick Sort *)
+
+let rec quicksort = function 
+	| [] -> []
+        | [x] -> [x]
+	| x::xs -> 
+		let rec lessthan = function
+			| (a, []) -> [] 
+			| (a, b::bs) -> if b < a then b::lessthan(a,bs)
+						  else lessthan(a,bs)
+		in
+		let rec morethan = function
+			| (a, []) -> []
+			| (a, b::bs) -> if b >= a then b::morethan(a,bs)
+						 else morethan(a,bs)
+		in
+                        quicksort (lessthan (x, xs)) @ [x] @ quicksort (morethan (x, xs))
+
+;; 
+
 (* TEST VALUES *)
 
 let test = [2;3;5;6;8;7;6;4;2;3;1;10;4;2];;
 
-let o1 = mergesort test 
+let o1 = quicksort test 
 
 let () = List.iter (printf "%d ") o1 ;;
 printf "\n";;

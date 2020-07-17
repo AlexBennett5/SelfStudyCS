@@ -175,44 +175,42 @@ class JavaSortAlg {
 	//Non-recursive implementation of mergesort
 	//
 	public static void bmergeSort(int[] arr) {
-	
-	
-		int[] temp = new int[arr.length];
 
-		//w is one half the width of subarray being considered
-		for (int w = 1; w < arr.length; w *= 2) {
+		int len = arr.length;
+		int[] temp = new int[len];
 
-			for (int lo = 0; lo < arr.length-w; lo += 2*w) {
+		for (int w = 1; w < len; w *= 2) {
 
+			for (int lo = 0; lo < len - w; lo += (2*w)) {
+		
 				int mid = lo + w - 1;
-				int hi = Math.min(lo + 2*w - 1, arr.length - 1);
+				int hi = Math.min(lo + 2*w - 1, len - 1);		
 				bmerge(arr, temp, lo, mid, hi);
 			}
-		}
 
+		}
 
 	}
 
 	public static void bmerge(int[] arr, int[] temp, int lo, int mid, int hi) {
-
-		//Copy original array values to temp
+		
 		for (int i = lo; i <= hi; i++) {
 			temp[i] = arr[i];
 		}
-		
-		int il = lo;
-		int ir = mid+1;
 
-		for (int i = lo; i <= hi; i++) {
+		int il = lo;
+		int im = mid+1;
+
+		for (int ia = lo; ia <= hi; ia++) {
 
 			if (il > mid) {
-				arr[i] = temp[ir++];
-			} else if (ir > hi) {
-				arr[i] = temp[il++];
-			} else if (temp[il] < temp[ir]) {
-				arr[i] = temp[il++];
+				arr[ia] = temp[im++];
+			} else if (im > hi) {
+				arr[ia] = temp[il++];
+			} else if (temp[il] < temp[im]) {
+				arr[ia] = temp[il++];
 			} else {
-				arr[i] = temp[ir++];
+				arr[ia] = temp[im++];
 			}
 
 		}
@@ -220,12 +218,92 @@ class JavaSortAlg {
 
 	}
 
+	//Quick Sort
+	//
+	//
+	
+	public static void quickSort(int[] arr) {
+		quickSortHoare(arr, 0, arr.length - 1);
+	}
+
+	public static void quickSortLomuto(int[] arr, int lo, int hi) {
+
+		if (lo < hi) {
+
+			int p = lomuto(arr, lo, hi);
+			quickSortLomuto(arr, lo, p-1);
+			quickSortLomuto(arr, p+1, hi);
+
+		}
+
+	}
+
+	public static int lomuto(int[] arr, int lo, int hi) {
+
+		int pivot = arr[hi];
+		int k = lo;
+
+		for (int j = lo; j < hi; j++) {
+			
+			if (arr[j] < pivot) {
+				int temp = arr[k];
+			       	arr[k] = arr[j];
+				arr[j] = temp;
+				k++;
+			}	
+		}
+
+		int temp = arr[k];
+		arr[k] = arr[hi];
+		arr[hi] = temp;
+		return k;
+	}
+
+	public static void quickSortHoare(int[] arr, int lo, int hi) {
+
+		if (lo < hi) {
+
+			int p = hoare(arr, lo, hi);
+			quickSortHoare(arr, lo, p);
+			quickSortHoare(arr, p+1, hi);
+
+		}
+
+	}
+
+	public static int hoare(int[] arr, int lo, int hi) {
+
+		int pivot = arr[(hi+lo)/2];
+		int k = lo - 1;
+		int j = hi + 1;
+
+		while (true) {
+
+			do {
+				k++;
+			} while (arr[k] < pivot);
+
+			do {
+				j--;
+			} while (arr[j] > pivot);
+
+			if (k >= j)
+				return j;
+
+			int temp = arr[k];
+			arr[k] = arr[j];
+			arr[j] = temp;
+			
+
+		}
+
+	}
 
 	//Testing methods
 	public static void main(String[] args) {
 
 		int[] a = {4,6,2,3,8,7,3,1,9,8,6,1,10};		
-		bmergeSort(a);		
+		quickSort(a);		
 		System.out.println(Arrays.toString(a));
 	}
 
