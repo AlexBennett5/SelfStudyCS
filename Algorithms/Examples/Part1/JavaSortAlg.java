@@ -10,7 +10,7 @@ class JavaSortAlg {
 	//Worst Case: O(n^2) comparisons & swaps [Reverse sorted array]
 	//Avg Case: O(n^2) comparisons & swaps
 	//Space: O(n) total, O(1) auxiliary
-	//Adaptive, In-Place
+	//Adaptive, In-Place, Stable
 	//
 	//More efficient than Selection Sort when array is partially sorted
 	//
@@ -68,7 +68,7 @@ class JavaSortAlg {
 	//Worst Case: O(n^2) comparions, O(n) swaps
 	//Avg Case: O(n^2) comparisons, O(n) swaps
 	//Space: O(n) total, O(1) auxiliary
-	//Non-Adaptive, In-Place
+	//Non-Adaptive, In-Place, Not Stable
 	//
 	//Less writes (swaps) than insertionsort (O(n) vs O(n^2))
 	//
@@ -106,7 +106,7 @@ class JavaSortAlg {
 	//Worst Case: O(n^2) comparisons & swaps [Reverse sorted array]
 	//Avg Case: O(n^2) comparisons & swaps
 	//Space: O(n) total, O(1) auxiliary
-	//Adaptive, In-Place
+	//Adaptive, In-Place, Stable
 	//
 	//Noticeably slower than Insertion Sort despite same Big-O
 	//During a pass Insertion Sort can bail early, Bubble Sort must see it to the end
@@ -134,6 +134,7 @@ class JavaSortAlg {
 	//Worst Case: O(nlogn)
 	//Avg Case: O(nlogn)
 	//Space: O(n) total, O(n) auxiliary
+	//Stable
 	//
 	public static int[] mergeSort(int[] arr) {
 
@@ -218,22 +219,49 @@ class JavaSortAlg {
 
 	}
 
-	//Quick Sort
+	//***QUICK SORT***
+	//Best Case: O(nlogn) [Pivot divides array into two sublists of equivalent size] 
+	//Worst Case: O(n^2) [Pivot is always either greatest or smallest element of sublist]
+	//Avg Case: O(nlogn)
+	//Space: O(logn) [Best case], O(n) [Worst case]
+	//Not Stable
 	//
+	//Insertion sort is used for smaller arrays/subarrays to improve performance
 	//
-	
 	public static void quickSort(int[] arr) {
 		quickSortHoare(arr, 0, arr.length - 1);
+	}
+
+	public static void insortAug(int[] arr, int lo, int hi) {
+
+		for (int k = lo+1; k < hi; k++) {
+
+			int j = k-1;
+			int val = arr[k];
+			
+			while (j >= 0 && arr[j] > val) {
+				arr[j+1] = arr[j];
+				j--;
+			}
+
+			arr[j+1] = val;
+
+		}
+
 	}
 
 	public static void quickSortLomuto(int[] arr, int lo, int hi) {
 
 		if (lo < hi) {
 
-			int p = lomuto(arr, lo, hi);
-			quickSortLomuto(arr, lo, p-1);
-			quickSortLomuto(arr, p+1, hi);
+			if (hi - lo < 10) {
+				insortAug(arr, lo, hi);
+			} else {
 
+				int p = lomuto(arr, lo, hi);
+				quickSortLomuto(arr, lo, p-1);
+				quickSortLomuto(arr, p+1, hi);
+			}
 		}
 
 	}
@@ -246,16 +274,12 @@ class JavaSortAlg {
 		for (int j = lo; j < hi; j++) {
 			
 			if (arr[j] < pivot) {
-				int temp = arr[k];
-			       	arr[k] = arr[j];
-				arr[j] = temp;
+				swap(arr, k, j);
 				k++;
 			}	
 		}
 
-		int temp = arr[k];
-		arr[k] = arr[hi];
-		arr[hi] = temp;
+		swap(arr, k, hi);
 		return k;
 	}
 
@@ -263,14 +287,21 @@ class JavaSortAlg {
 
 		if (lo < hi) {
 
-			int p = hoare(arr, lo, hi);
-			quickSortHoare(arr, lo, p);
-			quickSortHoare(arr, p+1, hi);
+			if (hi - lo < 10) {
+				insortAug(arr, lo, hi);
+			} else {
 
+				int p = hoare(arr, lo, hi);
+				quickSortHoare(arr, lo, p);
+				quickSortHoare(arr, p+1, hi);
+			}
 		}
 
 	}
-
+	
+	//Bidirectional iteration through subarray reduces the number of swaps vs Lomuto
+	//Ex: Hoare is faster if the leftmost element is the largest in the subarray as Lomuto
+	//    would behave like bubblesort
 	public static int hoare(int[] arr, int lo, int hi) {
 
 		int pivot = arr[(hi+lo)/2];
@@ -299,12 +330,40 @@ class JavaSortAlg {
 
 	}
 
+	//Quicksort with three way partition
+	//Efficient for arrays with many repeated values, based on Dutch national flag problem
+	public static void quickSortDutch(int[] arr, int lo, int hi) {
+
+		if (lo < hi) {
+
+			int lt = lo;
+			int gt = hi;
+			int i = lo;
+
+			while (i <= gt) {
+
+				if (arr[i] < arr[lt]) swap(arr, i++, lt++);
+				else if (arr[i] > arr[lt]) swap(arr, i, gt--);
+				else i++;	
+
+			}
+
+			quickSortDutch(arr, lo, lt-1);
+			quickSortDutch(arr, gt+1, hi);
+
+		}
+
+	}
+
 	//Testing methods
 	public static void main(String[] args) {
 
-		int[] a = {4,6,2,3,8,7,3,1,9,8,6,1,10};		
-		quickSort(a);		
+		int[] a = {4,6,2,3,8,7,3,1,9,8,6,1,10};
+		int[] b = {3,4,6,3,4,4,6,7,9,8,5,4,4,2,1,3,4,4,6,5,4,8,9,10,12,4};		
+		quickSort(a);
+		quickSortDutch(b, 0, b.length-1);		
 		System.out.println(Arrays.toString(a));
+		System.out.println(Arrays.toString(b));
 	}
 
 }
