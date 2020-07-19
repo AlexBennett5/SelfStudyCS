@@ -2,8 +2,12 @@
 package Part1;
 
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 
 class JavaSortAlg {
+
+	//***COMPARISON SORTS***
 
 	//***INSERTION SORT***
 	//Best Case: O(n) comparisons, O(1) swaps [Sorted array]
@@ -332,6 +336,10 @@ class JavaSortAlg {
 
 	//Quicksort with three way partition
 	//Efficient for arrays with many repeated values, based on Dutch national flag problem
+	//
+	//arr[lo..lt-1] < mid = arr[lt..gt] < arr[gt+1..hi]
+	//mid is arr[lo] by default
+	//
 	public static void quickSortDutch(int[] arr, int lo, int hi) {
 
 		if (lo < hi) {
@@ -355,15 +363,221 @@ class JavaSortAlg {
 
 	}
 
+	//***HEAP SORT***
+	//Best Case: O(nlogn)
+	//Worst Case: O(nlogn)
+	//Avg Case: O(nlogn)
+	//Space: O(n) total, O(1) auxiliary
+	//In-Place, Not Stable
+	//
+	//In the best case slower than Quicksort since it must always swap 100% of elements
+	//In the worst case faster than Quicksort
+	//
+	public static void heapSort(int[] arr) {
+		maxHeapSort(arr);
+	}
+
+	//Heap Sort using a max heap (sorts to ascending order)
+	public static void maxHeapSort(int[] arr) {
+
+		for (int k = arr.length/2 - 1; k >= 0; k--) {
+			maxHeapify(arr, arr.length, k);
+		}
+
+		for (int k = arr.length-1; k > 0; k--) {
+			swap(arr, 0, k);
+			maxHeapify(arr, k, 0);
+		}
+
+	}
+
+	public static void maxHeapify(int[] arr, int end, int root) {
+
+		int l = 2*root + 1;
+		int r = 2*root + 2;
+
+		int largest = root;
+
+		if (l < end && arr[l] > arr[root]) largest = l;
+		if (r < end && arr[r] > arr[largest]) largest = r;
+
+		if (largest != root) {
+			swap(arr, root, largest);
+			maxHeapify(arr, end, largest);
+		}
+
+	}
+
+	//Heap Sort using a min heap (sorts to descending order)
+	public static void minHeapSort(int[] arr) {
+
+		for (int k = arr.length/2 - 1; k >= 0; k--) {
+			minHeapify(arr, arr.length, k);
+		} 
+
+		for (int k = arr.length-1; k > 0; k--) {
+			swap(arr, 0, k);
+			minHeapify(arr, k, 0);
+		}
+
+	}
+
+	public static void minHeapify(int[] arr, int end, int root) {
+
+		int l = 2*root + 1;
+		int r = 2*root + 2;
+
+		int smallest = root;
+
+		if (l < end && arr[l] < arr[root]) smallest = l;
+		if (r < end && arr[r] < arr[smallest]) smallest = r;
+
+		if (smallest != root) {
+			swap(arr, root, smallest);
+			minHeapify(arr, end, smallest);
+		}
+
+	}
+
+	//***LINEAR SORTS***
+
+	//***COUNTING SORT***
+	// Best/Worst/Avg Case: O(n+k) [k is possible values within assumed range]
+	// Space: O(k) auxiliary
+	//
+	//Assumption: Input is array of small integers.
+	//Variation in key values should not be much greater than length of array
+	//
+	public static void countSort(int[] arr) {
+
+		int n = arr.length;
+		int[] count = new int[n];
+
+		for (int k = 0; k < n; k++) {
+			count[k] = 0;
+		}
+
+		for (int k = 0; k < n; k++) {
+			count[arr[k]]++;
+		}
+
+		int k = 0;
+		int j = 0;
+
+		while (j < n) {
+	
+			if (count[j] == 0) {
+				j++;
+			} else {
+				arr[k++] = j;
+				count[j]--;
+			}
+	
+		}
+
+	}
+
+	//***BUCKET SORT***
+	//Best Case: O(n+k) [k is number of buckets]
+	//Worst Case: O(n^2) [all elements allocated to same bucket]
+	//Avg Case: O(n+k)
+	//Space: O(n+k) auxiliary
+	//
+	//Assumption: Elements are uniformly distributed among buckets
+	//The average bucket should contain ~O(1) elements
+	//If concentrated to one bucket, the complexity is that of the auxiliary sorting alg
+	//
+	public static void bucketSort(float[] arr) {
+
+		int n = arr.length;
+
+		if (n <= 0) return;
+		
+		ArrayList<Float>[] bucket = new ArrayList[n];
+
+		for (int i = 0; i < n; i++) {
+			bucket[i] = new ArrayList<Float>();
+		}
+
+		for (int i = 0; i < n; i++) {
+			int index = (int) arr[i] * n;
+			bucket[index].add(arr[i]);
+		}
+
+		for (int i = 0; i < n; i++) {
+			Collections.sort(bucket[i]);
+		}
+
+		int index = 0;
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0, len = bucket[i].size(); j < len; j++) {
+				arr[index++] = bucket[i].get(j);
+			}
+		}
+
+	}
+
+	//***RADIX SORT***
+	//Worst Case: O(w*n) [w is number of digits to store each key]
+	//Space: O(w+n)
+	//
+	//Assumption: Only works when sorting numbers with fixed number of digits
+	//Arbitrarily large integers don't work
+	//
+	public static void radixSort(int[] arr) {
+		
+		final int radix = 10;
+		ArrayList<Integer>[] bucket = new ArrayList[radix];
+
+		for (int i = 0; i < radix; i++) {
+			bucket[i] = new ArrayList<Integer>();
+		}
+
+		boolean maxLength = false;
+		int place = 1;
+		int val = -1;
+
+		while(!maxLength) {
+
+			maxLength = true;
+
+			//Count sort on place value
+			for (Integer i : arr) {
+
+				val = i/place;
+				bucket[val % radix].add(i);
+
+				if (maxLength && val > 0) {
+					maxLength = false;
+				}
+			}
+
+			int k = 0;
+
+			for (int j = 0; j < radix; j++) {
+				for (Integer i : bucket[j]) {
+					arr[k++] = i;
+				}
+				bucket[j].clear();
+			}
+
+			place *= radix;
+		
+		}
+
+	}
+
 	//Testing methods
 	public static void main(String[] args) {
 
-		int[] a = {4,6,2,3,8,7,3,1,9,8,6,1,10};
-		int[] b = {3,4,6,3,4,4,6,7,9,8,5,4,4,2,1,3,4,4,6,5,4,8,9,10,12,4};		
-		quickSort(a);
-		quickSortDutch(b, 0, b.length-1);		
-		System.out.println(Arrays.toString(a));
+		int[] a = {434,2342,6234,123,347,872,109,107,23,1,245};	
+		float[] b = {(float)0.23, (float)0.56, (float)0.12, (float)0.333, (float)0.81, (float)0.999};
+		radixSort(a);
+		bucketSort(b);
+		System.out.println(Arrays.toString(a));	
 		System.out.println(Arrays.toString(b));
+
 	}
 
 }
