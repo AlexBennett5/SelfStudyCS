@@ -11,37 +11,44 @@ def pairs(n):
 	return (m1, m2)
 
 def kinetic_exchange(v, w):
-	vnew = np.add(v,w).astype(float)
-	wnew = np.add(v,w).astype(float)
-	for k in range(0,len(v)):
-		R = random.uniform(0,1)
-		vnew[k] = (vnew[k]*R).astype(float)
-		wnew[k] = (wnew[k]*(1-R)).astype(float)
-	return(vnew, wnew)
+        a,b = pairs(len(v)*2)
+        c = np.concatenate((v,w))
+        vnew = np.array([c[k] for k in a])
+        wnew = np.array([c[k] for k in b])
+        sumarr = np.add(vnew, wnew)
+        for k in range(0,len(v)):
+            R = random.uniform(0,1)
+            vnew[k] = sumarr[k]*R
+            wnew[k] = sumarr[k]*(1.-R)
+        return(vnew,wnew)
 
 def gini(w):
-	denom = len(w)*np.sum(w)
-	iter = w*np.arange(1,len(w)+1)
-	num = 2*np.sum(iter)
-	gini = (num/denom) - (1 + (1/len(w)))
-	return gini
+        denom = len(w)*np.sum(w)
+        comb = w*np.arange(1,len(w)+1)
+        num = 2.*np.sum(comb)
+        gini = (num/denom) - (1. + (1./len(w)))
+        return gini
 
 def sim(N, T):
-	gs = np.empty(T, dtype=float)
-	v,w = pairs(N)
-	for k in range(0,T):
-		v,w = kinetic_exchange(v,w)
-		z = np.concatenate((v,w))
-		z = np.sort(z)
-		gs[k] = gini(z)
-	z = np.concatenate((v,w))
-	z = np.sort(z)
-	return (z, gs)
+        gs = np.empty(T, dtype=float)
+        v = np.full(N//2, 1.)
+        w = np.full(N//2, 1.)
+        for k in range(0,T):
+                v,w = kinetic_exchange(v,w)
+                z = np.concatenate((v,w))
+                z = np.sort(z)
+                gs[k] = gini(z)
+        z = np.concatenate((v,w))
+        return (z, gs)
 		
 def main():
-	w,y = sim(500000,30)
-	x = np.arange(30)
-	
+        w,gs = sim(500000,30)
+        fig = plt.figure()
+        plt.plot(gs)
+        fig.suptitle('Gini coefficient')
+        plt.xlabel('timestep')
+        fig.savefig('test.jpg')
+        plt.show()	
 
-if __name__ == “__main__”:
+if __name__ == "__main__":
 	main()
