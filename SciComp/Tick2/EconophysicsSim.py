@@ -2,6 +2,9 @@ import numpy as np
 import random
 from matplotlib import pyplot as plt
 
+#This is an older and less accurate version of this program. 
+#Use EconMobility.py instead
+
 def pairs(n):
 	arr = np.arange(n)
 	np.random.shuffle(arr)
