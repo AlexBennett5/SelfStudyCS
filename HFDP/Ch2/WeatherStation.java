@@ -4,7 +4,8 @@ package Ch2;
 /*
  * An example of the OBSERVER pattern. 
  * This implementation uses the built in Observable class/Observer interface
- * You could just as easily use the Subject/Observer interfaces included in this package 
+ * The built-in Observable is somewhat inflexible, so you can write your own 
+ * (eg the Subject & Observer interfaces in this package)
  *
 */
 
