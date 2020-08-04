@@ -21,27 +21,6 @@ int main(void) {
   return 0;
 }
 
-/* This should result in the following output:
-
-Original: University
-Reversed: ytisrevinU
-Original: University of Cambridge
-Reversed: ytisrevinU fo egdirbmaC
-Original: Hello, world
-Reversed: olleH, dlrow
-Original:  Hello 
-Reversed:  olleH 
-Original: University of Cambridge!
-Reversed: ytisrevinU fo egdirbmaC!
-Original:  University of Cambridge
-Reversed:  ytisrevinU fo egdirbmaC
-Original: -$$$!!!-
-Reversed: -$$$!!!-
-Original: University-of-Cambridge
-Reversed: ytisrevinU-fo-egdirbmaC
-
-*/
-
 
   
   
