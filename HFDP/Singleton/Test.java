@@ -1,6 +1,9 @@
 
 package Singleton;
 
+import java.lang.Thread;
+import java.lang.Exception;
+
 public class Test {
 
 	public static void main(String[] args) {
@@ -13,11 +16,10 @@ public class Test {
 		Thread b2 = new Thread(balan1);
 		Thread b3 = new Thread(balan2);
 
-		while(true) {
-			b1.start();
-			b2.start();
-			b3.start();
-		}
+		b1.start();
+		b2.start();
+		b3.start();
+
 	}
 
 }

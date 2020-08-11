@@ -5,19 +5,20 @@ import java.util.Random;
 
 public class BalancedStrategy implements IStrategy {
 	
-	public static int shareStrat(int shares) {
+	private Random rand = new Random();
+
+	public int shareStrat(int shares) {
 		StockMarket sm = StockMarket.getInstance();
-		Random rand = new Random();
 		int fract = rand.nextInt(10) + 1;
 
 		int sell = ((fract/2)*shares)/fract;
 		int buy = ((fract/2)*shares)/fract;
 
 		sm.addShares(sell);
-		return sm.deductShares(buy);
+		return rand.nextInt(50) + sm.deductShares(buy);
 	}
 	
-	public static double shareValue(int shares) {
+	public double shareValue(int shares) {
 		StockMarket sm = StockMarket.getInstance();
 		return sm.getCurrentValue(shares);
 	}

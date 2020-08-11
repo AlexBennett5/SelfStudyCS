@@ -12,10 +12,10 @@ public class StockMarket {
 
 	private StockMarket() {
 		int sharesIn = 100;
-		double sharePrice = 10.0;
+		double sharePrice = 1000.0;
 	};
 
-	public synchronized StockMarket getInstance() {
+	public static StockMarket getInstance() {
 		return sm;
 	}
 
@@ -42,14 +42,18 @@ public class StockMarket {
 
 	public void updateSharePrice() {
 
-		sharePrice = (double)sharesIn/(rand.nextDouble()*100.0);
+		sharePrice = (sharePrice*(rand.nextDouble())) + (sharesIn*(rand.nextDouble()));
 
 	}
 
 	public double getCurrentValue(int shares) {
 
-		return (double)shares*sharePrice;
+		return shares*sharePrice;
 
+	}
+
+	public int getTotalShares() {
+		return sharesIn;
 	}
 	
 }

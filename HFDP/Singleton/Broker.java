@@ -32,16 +32,19 @@ public class Broker implements Runnable {
 
 	public void run() {
 
-		try {
-			System.out.println("Broker " + name + " makes trade");
-			makeTrade();
-			System.out.println("Broker " + name + " has " + shares + " shares, worth " + shareVal);
-			Thread.sleep(delay);
+		while (true) {
+		
+			try {
+				System.out.println("Broker " + name + " makes trade");
+				makeTrade();
+				System.out.println("Broker " + name + " has " + shares + " shares, worth " + shareVal);
+				Thread.sleep(delay);
+	
+			} catch (Exception ex) {
+				System.out.println("Broker " + name + " dropped from trading");
+			}
 
-		} catch (Exception ex) {
-			System.out.println("Broker " + name + " dropped from trading");
 		}
-
 	}
 
 }
