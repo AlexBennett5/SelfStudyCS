@@ -33,8 +33,12 @@ void free_expr(expr_t e) {
       break;
     case PLUS:
     case TIMES: {
-      free_expr(e->data.args.fst);
-      free_expr(e->data.args.snd);
+      if (e->data.args.fst == e->data.args.snd) {
+      	free_expr(e->data.args.fst);
+      } else {
+      	free_expr(e->data.args.fst);
+      	free_expr(e->data.args.snd);
+      }
       free(e);
       break;
     }
