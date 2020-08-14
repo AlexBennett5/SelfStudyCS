@@ -10,11 +10,13 @@ public class Light {
 	private int currentColorIndex;
 	private Color currentColor;
 
-	private LightWindow window;
+	private LightWindowGUI window;
 
 	public Light(String[] colors) {
 
-		if (colors.length == 0) col = {"#FFFFFF"};
+		String[] wht = {"#FFFFFF"};
+
+		if (colors.length == 0) col = wht;
 		else col = colors;
 
 		colorSize = col.length;
@@ -24,7 +26,7 @@ public class Light {
 
 	}
 
-	public void setLightWindow(LightWindow window) {
+	public void setWindow(LightWindowGUI window) {
 		
 		this.window = window;
 	}	
@@ -43,7 +45,7 @@ public class Light {
 
 	public void cycleLeft() {
 
-		currentColorIndex = (currentColorIndex - 1) % colorSize;
+		currentColorIndex = (((currentColorIndex - 1) % colorSize) + colorSize) % colorSize;
 		currentColor = Color.decode(col[currentColorIndex]);
 		notifyObserver();
 	}

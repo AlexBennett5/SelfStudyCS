@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.GridLayout;
 
-public class LightWindow {
+public class LightWindowGUI {
 
 	private Light UL;
 	private Light UR;
@@ -17,28 +17,28 @@ public class LightWindow {
 	private JLabel LLlab;
 	private JLabel LRlab;
 
-	public LightWindow(Light UL, Light UR, Light LL, Light LR) {
+	public LightWindowGUI(Light[] lights) {
 
-		this.UL = UL;
-		this.UR = UR;
-		this.LL = LL;
-		this.LR = LR;
+		UL = lights[0];
+		UR = lights[1];
+		LL = lights[2];
+		LR = lights[3];
 
-		ULlab = new JLabel();
+		ULlab = new JLabel("Light 1");
 		ULlab.setBackground(UL.getColor());
-		UL.setOpaque();
+		ULlab.setOpaque(true);
 		
-		URlab = new JLabel();
+		URlab = new JLabel("Light 2");
 		URlab.setBackground(UR.getColor());
-		UR.setOpaque();
+		URlab.setOpaque(true);
 	
-		LLlab = new JLabel();
+		LLlab = new JLabel("Light 3");
 		LLlab.setBackground(LL.getColor());
-		LL.setOpaque();
+		LLlab.setOpaque(true);
 	
-		LRlab = new JLabel();
+		LRlab = new JLabel("Light 4");
 		LRlab.setBackground(LR.getColor());
-		LR.setOpaque();
+		LRlab.setOpaque(true);
 	}
 
 	public void update() {
@@ -50,13 +50,13 @@ public class LightWindow {
 
 	}
 
-	public JFrame generateJFrame() {
+	public JFrame generateFrame() {
 
 		JFrame frame = new JFrame("Light Window");
 		frame.setSize(600, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		frame.setLayout(new GridLayout(4,4));
+		frame.setLayout(new GridLayout(2,2));
 		frame.add(ULlab);
 		frame.add(URlab);
 		frame.add(LLlab);
