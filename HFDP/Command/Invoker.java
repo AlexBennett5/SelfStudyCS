@@ -1,6 +1,8 @@
 
 package Command;
 
+import java.util.ArrayList;
+
 public class Invoker {
 
 	ICommand[] lCommands;
@@ -30,12 +32,12 @@ public class Invoker {
 
 	public void leftPressed(int slot) {
 		lCommands[slot].execute();
-		undoCommand = lCommands[slot];
+		undoCommand = rCommands[slot];
 	}
 
 	public void rightPressed(int slot) {
 		rCommands[slot].execute();
-		undoCommand = rCommands[slot];
+		undoCommand = lCommands[slot];
 	}
 
 	public void undoPressed() {

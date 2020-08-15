@@ -11,23 +11,9 @@ public class InvokerGUI {
 
 	private Invoker invoke;
 
-	public InvokerGUI(Light[] lights) {
+	public InvokerGUI(Invoker invoke) {
 
-		invoke = new Invoker();
-		int k = 0;
-
-		for (Light light : lights) {
-	
-			DimCommand dm = new DimCommand(light);
-			BrightCommand br = new BrightCommand(light);
-			CycleLeftCommand lf = new CycleLeftCommand(light);
-			CycleRightCommand rg = new CycleRightCommand(light);
-
-			invoke.setCommand(k++, dm, br);
-			invoke.setCommand(k++, lf, rg);		
-
-		}
-
+		this.invoke = invoke;
 	}
 
 	public JFrame generateFrame() {
@@ -38,45 +24,46 @@ public class InvokerGUI {
 
 		frame.setLayout(new GridLayout(9, 2));
 		addButtons(frame);
-		
 
 		return frame;
 
 	}
 
-	public void addButtons(JFrame frame) {
+	private void addButtons(JFrame frame) {
 
-		int k = 1;
-
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0, k = 1; i < 8; i++, k++) {
 
 			String lightName = "L" + k;
-			JButton lbt = generateLeftButton("Dim", lightName, i);
-			JButton rbt = generateRightButton("Brighten", lightName, i);
-			i++;
-			JButton clbt = generateLeftButton("Cycle Left", lightName, i);
-			JButton crbt = generateRightButton("Cycle Right", lightName, i);
-			k++;
-		
-			frame.add(lbt);
-			frame.add(rbt);
-			frame.add(clbt);
-			frame.add(crbt);	
+			addDimBrightPair(frame, lightName, i++);
+			addCyclePair(frame, lightName, i);
 		}
 
-		JButton undo = new JButton("Undo");
-		undo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				invoke.undoPressed();
-			}
-		});
-
-		frame.add(undo);
-	
+		addUndoButton(frame);
 
 	}
 
-	public JButton generateLeftButton(String commandName, String lightName, int slot) {
+	private void addDimBrightPair(JFrame frame, String lightName, int slot) {
+
+		JButton dim = generateLeftButton("Dim", lightName, slot);
+		JButton bright = generateRightButton("Brighten", lightName, slot);
+
+		frame.add(dim);
+		frame.add(bright);
+
+	}
+
+	private void addCyclePair(JFrame frame, String lightName, int slot) {
+
+		JButton cycleLeft = generateLeftButton("Cycle Left", lightName, slot);
+		JButton cycleRight = generateRightButton("Cycle Right", lightName, slot);
+
+		frame.add(cycleLeft);
+		frame.add(cycleRight);
+
+	}
+
+
+	private JButton generateLeftButton(String commandName, String lightName, int slot) {
 
 		JButton bt = new JButton(commandName + " " + lightName);
 		bt.addActionListener(new ActionListener() {
@@ -89,7 +76,7 @@ public class InvokerGUI {
 
 	}
 	
-	public JButton generateRightButton(String commandName, String lightName, int slot) {
+	private JButton generateRightButton(String commandName, String lightName, int slot) {
 
 		JButton bt = new JButton(commandName + " " + lightName);
 		bt.addActionListener(new ActionListener() {
@@ -99,6 +86,19 @@ public class InvokerGUI {
 		});
 
 		return bt;
+
+	}
+
+	private void addUndoButton(JFrame frame) {
+
+		JButton bt = new JButton("Undo");
+		bt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				invoke.undoPressed();
+			}
+		});
+
+		frame.add(bt);
 
 	}
 }

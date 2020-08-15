@@ -2,34 +2,54 @@
 package Command;
 
 import javax.swing.JFrame;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Test {
 
-	//Program accepts input of the form "#FFFFF,#FFFFF/#FFFFFF/#FFFFFF/#FFFFFF,#FFFFFF"
-	//where '/' delineates each light color cycle
+	//Invoker only supports four lights
 
 	public static void main(String[] args) {
 
-		String colors = "#F0F8FF,#5F9EA0,#FA8072/#00FFFF,#FFDEAD/#D8BFD8,#E6E6FA,#FF00FF/#FF7F50,#FFD700";
-		String[][] lights = parseArg(colors);
+		Light l1 = new Light(generateColors("#F0F8FF,#5F9EA0,#FA8072"));	
+		Light l2 = new Light(generateColors("#00FFFF,#FFDEAD"));
+		Light l3 = new Light(generateColors("#D8BFD8,#E6E6FA,#FF00FF"));
+		Light l4 = new Light(generateColors("#FF7F50,#FFD700"));
+
+		ArrayList<Light> lights = new ArrayList<Light>();
+		Collections.addAll(lights, l1, l2, l3, l4);
 		
-		LightSystem sys = new LightSystem(lights);
-		sys.displaySystem();
-
+		LightSystem sys = new LightSystem(lights);	
+		displayGUI(sys);
 
 	}
 
-	public static String[][] parseArg(String arg) {
+	public static ArrayList<Color> generateColors(String str) {
 
-		String[] colors = arg.split("/");
+		ArrayList<Color> colors = new ArrayList<Color>();
+		String[] colorStr = str.split(",");
 
-		String[] l1 = colors[0].split(",");
-		String[] l2 = colors[1].split(",");
-		String[] l3 = colors[2].split(",");
-		String[] l4 = colors[3].split(",");
-	
-		return new String[][] {l1, l2, l3, l4};
+		for (String colorName : colorStr) {
+			colors.add(Color.decode(colorName));
+		}
+
+		return colors;
 	}
+
+	public static void displayGUI(LightSystem sys) {
+
+		InvokerGUI invoke = sys.generateInvokerGUI();
+		LightWindowGUI window = sys.generateLightWindowGUI();
+
+		JFrame remote = invoke.generateFrame();
+		JFrame lights = window.generateFrame();
+
+		remote.setVisible(true);
+		lights.setVisible(true);
+
+	}
+		
 
 }
 

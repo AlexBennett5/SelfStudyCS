@@ -2,70 +2,78 @@
 package Command;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class Light {
 
-	private String[] col;
-	private int colorSize;
+	private ArrayList<Color> colorCycle;
 	private int currentColorIndex;
 	private Color currentColor;
-
+	
 	private LightWindowGUI window;
 
-	public Light(String[] colors) {
+	public Light(ArrayList<Color> colors) {
 
-		String[] wht = {"#FFFFFF"};
-
-		if (colors.length == 0) col = wht;
-		else col = colors;
-
-		colorSize = col.length;
+		colorCycle = colors;
 		currentColorIndex = 0;
-
-		currentColor = Color.decode(col[currentColorIndex]);
+		currentColor = colorCycle.get(currentColorIndex);	
 
 	}
 
 	public void setWindow(LightWindowGUI window) {
 		
 		this.window = window;
-	}	
+	}
+
+	public Color getColor() {
+		
+		return currentColor;
+	}
+
+	public void updateColor() {
+
+		currentColor = colorCycle.get(currentColorIndex);
+		notifyWindow();
+	}
+
+	private void notifyWindow() {
+
+		window.update();
+	}
+
+	public void cycleLeft() {
+
+		currentColorIndex = subtractModuloSize(currentColorIndex);
+		updateColor();
+	}
+
+	private int subtractModuloSize(int n) {
+		
+		return (((n - 1) % colorCycle.size()) + colorCycle.size()) % colorCycle.size();
+	}
+
+	public void cycleRight() {
+
+		currentColorIndex = addModuloSize(currentColorIndex);
+		updateColor();
+
+	}
+
+	private int addModuloSize(int n) {
+
+		return (n + 1) % colorCycle.size();
+	}
 
 	public void dim() {
-		
+
 		currentColor = currentColor.darker();
-		notifyObserver();
+		notifyWindow();
 	}
 
 	public void brighten() {
 
 		currentColor = currentColor.brighter();
-		notifyObserver();
+		notifyWindow();
 	}
-
-	public void cycleLeft() {
-
-		currentColorIndex = (((currentColorIndex - 1) % colorSize) + colorSize) % colorSize;
-		currentColor = Color.decode(col[currentColorIndex]);
-		notifyObserver();
-	}
-	
-	public void cycleRight() {
-
-		currentColorIndex = (currentColorIndex + 1) % colorSize;
-		currentColor = Color.decode(col[currentColorIndex]);		
-		notifyObserver();
-	}
-
-	public Color getColor() {
-
-		return currentColor;
-	}
-
-	public void notifyObserver() {
-		
-		window.update();
-	}
-
 }
 

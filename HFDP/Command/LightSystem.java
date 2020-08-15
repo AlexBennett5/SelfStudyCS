@@ -1,35 +1,69 @@
 
 package Command;
 
-import javax.swing.JFrame;
+import java.util.ArrayList;
 
 public class LightSystem {
 
-	private InvokerGUI invoke;
-	private LightWindowGUI window;
+	private ArrayList<Light> lights;
+	private Invoker invoke;
 
-	public LightSystem(String[][] colors) {
+	public LightSystem(ArrayList<Light> lights) {
 
-		Light[] lights = {new Light(colors[0]), new Light(colors[1]), new Light(colors[2]), new Light(colors[3])};
-
-		invoke = new InvokerGUI(lights);
-		window = new LightWindowGUI(lights);
-
-		lights[0].setWindow(window);
-		lights[1].setWindow(window);
-		lights[2].setWindow(window);
-		lights[3].setWindow(window);
-	}
-
-	public void displaySystem() {
-
-		JFrame lights = window.generateFrame();
-		JFrame remote = invoke.generateFrame();
-
-		lights.setVisible(true);
-		remote.setVisible(true);
+		this.lights = lights;
+		invoke = new Invoker();
+		initializeInvoker();
 
 	}
+
+	private void initializeInvoker() {
+
+		int k = 0;
+
+		for (Light light : lights) {
+
+			DimCommand dm = new DimCommand(light);
+			BrightCommand br = new BrightCommand(light);
+			CycleLeftCommand lf = new CycleLeftCommand(light);
+			CycleRightCommand rg = new CycleRightCommand(light);
+
+			invoke.setCommand(k++, dm, br);
+			invoke.setCommand(k++, lf, rg);
+		}
+
+	}
+
+	public InvokerGUI generateInvokerGUI() {
+
+		return new InvokerGUI(invoke);
+
+	}
+
+	public LightWindowGUI generateLightWindowGUI() {
+
+		LightWindowGUI window = new LightWindowGUI();
+
+		for (Light light : lights) {
+
+			window.addLight(light);
+
+		}
+
+		setWindowForAllLights(window);
+
+		return window;
+
+	}
+
+	private void setWindowForAllLights(LightWindowGUI window) {
+
+		for (Light light : lights) {
+
+			light.setWindow(window);
+		}
+
+	}	
+
 
 }
 

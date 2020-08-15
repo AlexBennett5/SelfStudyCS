@@ -4,49 +4,51 @@ package Command;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.GridLayout;
+import java.awt.Color;
+import java.util.ArrayList;
 
 public class LightWindowGUI {
 
-	private Light UL;
-	private Light UR;
-	private Light LL;
-	private Light LR;
+	private ArrayList<Light> lights;
+	private ArrayList<JLabel> labels;	
 
-	private JLabel ULlab;
-	private JLabel URlab;
-	private JLabel LLlab;
-	private JLabel LRlab;
+	public LightWindowGUI() {
 
-	public LightWindowGUI(Light[] lights) {
+		lights = new ArrayList<Light>();
+		labels = new ArrayList<JLabel>();
 
-		UL = lights[0];
-		UR = lights[1];
-		LL = lights[2];
-		LR = lights[3];
+	}
 
-		ULlab = new JLabel("Light 1");
-		ULlab.setBackground(UL.getColor());
-		ULlab.setOpaque(true);
-		
-		URlab = new JLabel("Light 2");
-		URlab.setBackground(UR.getColor());
-		URlab.setOpaque(true);
-	
-		LLlab = new JLabel("Light 3");
-		LLlab.setBackground(LL.getColor());
-		LLlab.setOpaque(true);
-	
-		LRlab = new JLabel("Light 4");
-		LRlab.setBackground(LR.getColor());
-		LRlab.setOpaque(true);
+	public void addLight(Light lgt) {
+
+		lights.add(lgt);
+		labels.add(createLabel(lgt));
+
+	}
+
+	public JLabel createLabel(Light lgt) {
+
+		JLabel label = new JLabel("Light " + currentLightNumber());
+		label.setBackground(lgt.getColor());
+		label.setOpaque(true);
+		return label;
+
+	}
+
+	private int currentLightNumber() {
+
+		return lights.size();
+
 	}
 
 	public void update() {
 
-		ULlab.setBackground(UL.getColor());
-		URlab.setBackground(UR.getColor());
-		LLlab.setBackground(LL.getColor());
-		LRlab.setBackground(LR.getColor());
+		for (int i = 0; i < lights.size(); i++) {
+
+			Color newColor = lights.get(i).getColor();
+			labels.get(i).setBackground(newColor);
+
+		}	
 
 	}
 
@@ -56,16 +58,23 @@ public class LightWindowGUI {
 		frame.setSize(600, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		frame.setLayout(new GridLayout(2,2));
-		frame.add(ULlab);
-		frame.add(URlab);
-		frame.add(LLlab);
-		frame.add(LRlab);
+		int gridSize = lights.size()/2;
+
+		frame.setLayout(new GridLayout(gridSize, gridSize));
+		addLabelsToFrame(frame);	
 
 		return frame;
 		
 	}
-	
 
+	private void addLabelsToFrame(JFrame frame) {
+
+		for (JLabel label : labels) {
+
+			frame.add(label);
+		}
+
+	}
+	
 }
 
