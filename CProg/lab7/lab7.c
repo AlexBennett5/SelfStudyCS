@@ -49,34 +49,4 @@ int main(void) {
   return 0;
 }
 
-/* Expected correct output:
 
-$ ./lab6 
-re = x(ab+ba)
-re matches "ab" = -1
-re matches "xab" = 3
-re matches "abc" = -1
-re matches "xba" = 3
-re matches "xxx" = -1
-re matches "Hello, world" = -1
-re matches "axu" = -1
-
-re = (a+b+c)(x+y)(u+v+w)
-re matches "ab" = -1
-re matches "xab" = -1
-re matches "abc" = -1
-re matches "xba" = -1
-re matches "xxx" = -1
-re matches "Hello, world" = -1
-re matches "axu" = 3
-
-re = Hello, world
-re matches "ab" = -1
-re matches "xab" = -1
-re matches "abc" = -1
-re matches "xba" = -1
-re matches "xxx" = -1
-re matches "Hello, world" = 12
-re matches "axu" = -1
-
-*/

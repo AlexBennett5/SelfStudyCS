@@ -4,7 +4,7 @@
 
 arena_t create_arena(int size) { 
 	
-      	arena_t arena = malloc(sizeof(arena_t));
+      	arena_t arena = malloc(sizeof(struct arena));
       	arena->size = size;
 	arena->current = 0;
        	arena->elts = malloc(size * sizeof(Regexp));
@@ -73,25 +73,24 @@ Regexp *re_seq(arena_t a, Regexp *r1, Regexp *r2) {
 
 int re_match(Regexp *r, char *s, int i) { 
 
-	if (s != NULL && r != NULL) {
-
+	if (r != NULL) {
+		int j;
+		
 		switch (r->type) {
 		case CHR:
-			if (s[i] == r->data.chr) return i;
-			else return -1;
-			break;
-		case ALT:
-			if (re_match(r->data.pair.fst, s, i) != -1 || re_match(r->data.pair.snd, s, i) != -1) return i;
-		       	else return -1;
-			break;
+			return s[i] == r->data.chr ? i+1 : -1;
 		case SEQ:
-			if (re_match(r->data.pair.fst, s, i) != -1 && 	
-	
-				//TODO: Finish this function	
-
+			j = re_match(r->data.pair.fst, s, i);
+			if (j < 0) return -1;
+			else return re_match(r->data.pair.snd, s, j);
+		case ALT:
+			j = re_match(r->data.pair.fst, s, i);
+			if (j >= 0) return j;
+			else return re_match(r->data.pair.snd, s, i);
 		}
+	}
 
-	}	
+	return -1;	
 
 }
 
