@@ -9,12 +9,21 @@ public class Dot implements Shape {
 	private int y;
 	private final int DOT_SIZE = 20;
 	private Color color;
+	private Draggable component;
 
 	public Circle(int x, int y, Color color) {
 
 		this.x = x;
 		this.y = y;
 		this.color = color;
+	}
+
+	public void setDraggable(Draggable component) {
+		this.component = component;
+	}
+
+	public void notifyDraggable() {
+		component.updateLocation();
 	}
 
 	public int getX() {
@@ -40,6 +49,7 @@ public class Dot implements Shape {
 	public void move(int x, int y) {
 		this.x = x;
 		this.y = y;
+		notifyDraggable();
 	}
 
 	public boolean isOutsideShapeX(Shape shape) {

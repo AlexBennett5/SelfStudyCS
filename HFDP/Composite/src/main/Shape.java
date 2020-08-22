@@ -14,5 +14,6 @@ public interface Shape {
 	public boolean isOutsideShapeY(Shape shape);
 	public boolean isInsideCompositeShapeX(CompositeShape shape);
 	public boolean isInsideCompositeShapeY(CompositeShape shape);
+	public void notifyDraggable();
 }
 

@@ -10,6 +10,7 @@ public class Square implements Shape {
 	private int width;
 	private int height;
 	private Color color;
+	private Draggable component;
 
 	public Square(int x, int y, int width, int height, Color color) {
 
@@ -18,6 +19,14 @@ public class Square implements Shape {
 		this.width = width;
 		this.height = height;
 		this.color = color;
+	}
+
+	public void setDraggable(Draggable component) {
+		this.component = component;
+	}
+
+	public void notifyDraggable() {
+		component.updateLocation();
 	}
 
 	public int getX() {
@@ -43,6 +52,7 @@ public class Square implements Shape {
 	public void move(int x, int y) {
 		this.x = x;
 		this.y = y;
+		notifyDraggable();
 	}
 
 	public boolean isOutsideShapeX(Shape shape) {

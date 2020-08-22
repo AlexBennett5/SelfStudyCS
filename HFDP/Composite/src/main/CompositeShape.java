@@ -12,6 +12,7 @@ public class CompositeShape implements Shape {
 	private int height;
 	private Color color;
 	private ArrayList<Shape> shapes;
+	private Draggable component;
 
 	public CompositeShape(int x, int y, int width, int height, Color color) {
 
@@ -43,6 +44,28 @@ public class CompositeShape implements Shape {
 
 	}
 
+	public Shape currentShapeSelected(int x, int y) {
+
+		for (Shape shape : shapes) {
+
+			if (x >= shape.getX() && x <= shape.getX() + shape.getWidth() && y >= shape.getY() && y <= shape.getY() + shape.getHeight()) {
+				return shape;
+			}
+
+		}
+
+		return this;
+
+	}
+
+	public void setDraggable(Draggable component) {
+		this.component = component;
+	}
+
+	public void notifyDraggable() {
+		component.updateLocation();
+	}
+
 	public int getX() {
 		return x;
 	}
@@ -64,8 +87,18 @@ public class CompositeShape implements Shape {
 	}
 
 	public void move(int x, int y) {
+		
+		int deltaX = x - this.x;
+		int deltaY = y - this.y;
+
+		for (Shape shape : shapes) {
+
+			shape.move(shape.getX() + deltaX, shape.getY() + deltaY);
+		}
+		
 		this.x = x;
 		this.y = y;
+		notifyDraggable();
 	}
 
 	public boolean isOutsideShapeX(Shape shape) {

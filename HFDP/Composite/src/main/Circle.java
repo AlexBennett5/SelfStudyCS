@@ -9,6 +9,7 @@ public class Circle implements Shape {
 	private int y;
 	private int radius;
 	private Color color;
+	private Draggable component;
 
 	public Circle(int x, int y, int radius, Color color) {
 
@@ -16,6 +17,14 @@ public class Circle implements Shape {
 		this.y = y;
 		this.radius = radius;;
 		this.color = color;
+	}
+
+	public void setDraggable(Draggable component) {
+		this.component = component;
+	}
+
+	public void notifyDraggable() {
+		component.updateLocation();
 	}
 
 	public int getX() {
@@ -41,6 +50,7 @@ public class Circle implements Shape {
 	public void move(int x, int y) {
 		this.x = x;
 		this.y = y;
+		notifyDraggable();
 	}
 
 	public boolean isOutsideShapeX(Shape shape) {
