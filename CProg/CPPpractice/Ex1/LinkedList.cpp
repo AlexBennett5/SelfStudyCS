@@ -56,8 +56,9 @@ int LinkedList::pop() {
 
 	if (head != nullptr) {
 		int result = head->data;
+		Node* temp = head;
 		head = head->next;
-		delete head;
+		delete temp;
 		return result;
 	} else {
 		return -1;
@@ -66,17 +67,22 @@ int LinkedList::pop() {
 
 LinkedList& LinkedList::operator=(const LinkedList &l) {
 
-	delete this;
+	if (&l != this) {
+		Node* temp = head;
+		while (temp != nullptr && temp->next != nullptr) {
+			head = head->next;
+			delete temp;
+			temp = head;
+		}
 
-	Node* temp = l.head;
-	head = nullptr;
-
-	while(temp != nullptr) {
-		insert(temp->data);
-		temp = temp->next;
+		temp = l.head;
+		while (temp != nullptr) {
+			insert(temp->data);
+			temp = temp->next;
+		}
 	}
 
-	return *this; 
+	return *this;
 }
 
 LinkedList::~LinkedList() {
@@ -84,9 +90,9 @@ LinkedList::~LinkedList() {
 	Node* current = head;
 
 	while (current != nullptr) {
-		current = current->next;
-		delete head;
-		head = current;
+		head = head->next;
+		delete current;
+		current = head;
 	}
 
 }
