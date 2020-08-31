@@ -4,17 +4,17 @@
 #define TABWIDTH 7
 
 int getcharline(char s[], int len);
-void detab(char s[], char t[], int len, int tabwidth);
+void entab(char s[], char t[], int len, int tabwidth);
 
 int main() {
 
 	int len;
 	char line[MAXLENGTH];
-	char detabbed[MAXLENGTH];
+	char entabbed[MAXLENGTH];
 
 	while ((len = getcharline(line, MAXLENGTH)) > 0) {
-		detab(line, detabbed, MAXLENGTH, TABWIDTH);
-		printf("%s\n", detabbed);
+		entab(line, entabbed, MAXLENGTH, TABWIDTH);
+		printf("%s", entabbed);
 	}
 
 }
@@ -32,16 +32,19 @@ int getcharline(char s[], int len) {
 	return i;
 }
 
-void detab(char s[], char t[], int len, int tabwidth) {
-	int i, j;
-	i = j = 0;
+void entab(char s[], char t[], int len, int tabwidth) {
+	int i, j, whitespace;
+	i = j = whitespace = 0;
 	while (s[i] != '\0') {
-		if (s[i] == '\t') {
-			int whitespace = tabwidth - (i % tabwidth);
-			for (int k = 0; k < whitespace; k++)
-				t[j++] = ' ';
+		if (s[i] == ' ') {
+			++whitespace;
+			if ((whitespace % tabwidth) == 0)
+				t[j++] = '\t';
 		} else {
+			for (int k = 0; k < (whitespace % tabwidth); k++)
+				t[j++] = ' ';
 			t[j++] = s[i];
+			whitespace = 0;
 		}
 		++i;
 	}
