@@ -1,7 +1,9 @@
+testing = queue
+
 all:
 	gcc -Wall -c test.c
-	gcc -Wall -c stack.c
-	gcc -o test test.o stack.o
+	gcc -Wall -c $(testing).c
+	gcc -o test test.o $(testing).o
 
 clean:
-	rm -f test test.o stack.o
+	rm -f test test.o $(testing).o

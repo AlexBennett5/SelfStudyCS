@@ -1,10 +1,10 @@
 #include <stdio.h>
-#include "stack.h"
+#include "queue.h"
 
 int main() {
-	Stack* s = createStack(100);
+	Queue* q = createQueue();
 	for (int i = 0; i < 10; i++)
-		push(i, s);
+		enqueue(q, i);;
 	for (int i = 0; i < 11; i++)
-		printf("%d, %d\n", pop(s), top(s));
+		printf("%d, %d\n", dequeue(q), first(q));
 }
