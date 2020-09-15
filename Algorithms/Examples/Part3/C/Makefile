@@ -1,4 +1,4 @@
-testing = queue
+testing = hash
 
 all:
 	gcc -Wall -c test.c

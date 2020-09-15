@@ -1,10 +1,14 @@
 #include <stdio.h>
-#include "queue.h"
+#include "hash.h"
 
 int main() {
-	Queue* q = createQueue();
-	for (int i = 0; i < 10; i++)
-		enqueue(q, i);;
-	for (int i = 0; i < 11; i++)
-		printf("%d, %d\n", dequeue(q), first(q));
+	Hashtable *ht = create_hashtable();
+	set(ht, "john", "joseph");
+	set(ht, "samantha", "gertvald");
+	set(ht, "pieter", "van der baan");
+	set(ht, "ama", "odvenberk");
+
+	printf("%s\n", get(ht, "john"));
+	printf("%s\n", get(ht, "pieter"));
+	printf("%s\n", get(ht, "rebecka"));
 }
